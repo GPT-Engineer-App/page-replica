@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { Card, CardContent } from "@/components/ui/card";
 
 const ChatPage = () => {
   return (
@@ -13,7 +14,7 @@ const ChatPage = () => {
         <div className="mb-4">
           <Select>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select model" />
+              <SelectValue placeholder="gpt-4.0" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="gpt-4">gpt-4.0</SelectItem>
@@ -22,18 +23,24 @@ const ChatPage = () => {
           </Select>
         </div>
         
-        <div className="flex-1 mb-4">
-          <h3 className="text-sm font-semibold mb-2">SYSTEM</h3>
-          <Textarea placeholder="Enter system instructions" className="h-32" />
-        </div>
+        <Card className="flex-1 mb-4">
+          <CardContent className="pt-6">
+            <h3 className="text-sm font-semibold mb-2 text-gray-500">SYSTEM</h3>
+            <Textarea placeholder="Enter system instructions" className="h-32 border-0 focus:ring-0" />
+          </CardContent>
+        </Card>
         
         <div className="mt-auto">
-          <div className="flex items-center space-x-2 mb-2">
-            <Button variant="outline">User</Button>
-            <Input placeholder="Enter user message..." className="flex-1" />
-            <Button>Add</Button>
-            <Button>Run</Button>
-          </div>
+          <Card>
+            <CardContent className="p-2">
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">User</Button>
+                <Input placeholder="Enter user message..." className="flex-1" />
+                <Button size="sm">Add</Button>
+                <Button size="sm">Run</Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -71,6 +78,11 @@ const ChatPage = () => {
             <label className="text-sm font-medium">Presence penalty</label>
             <Slider defaultValue={[0]} max={2} step={0.1} />
           </div>
+        </div>
+
+        <div className="mt-4 text-xs text-gray-500">
+          <p>API and Playground requests will not be used to train our models.</p>
+          <a href="#" className="text-blue-500">Learn more</a>
         </div>
       </div>
     </div>
