@@ -8,9 +8,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight, ChevronDown } from 'lucide-react';
 
 const mockThreads = [
-  { id: 1, title: "Project Discussion", messages: ["Hello", "How's the project going?"] },
-  { id: 2, title: "Team Meeting", messages: ["Meeting at 2 PM", "Don't forget to bring your reports"] },
-  { id: 3, title: "Client Feedback", messages: ["The client loved our proposal!", "Let's schedule a follow-up"] },
+  {
+    id: 1,
+    title: "Project Discussion",
+    messages: [
+      { sender: "User", content: "Hello, how's the project going?" },
+      { sender: "AI", content: "The project is progressing well. We've completed the initial phase." },
+      { sender: "User", content: "Great! What's our next step?" },
+      { sender: "AI", content: "We should schedule a team meeting to discuss the next phase." },
+    ]
+  },
+  {
+    id: 2,
+    title: "Team Meeting",
+    messages: [
+      { sender: "User", content: "Meeting at 2 PM today. Don't forget to bring your reports." },
+      { sender: "AI", content: "Understood. I'll prepare a summary of our recent progress." },
+      { sender: "User", content: "Perfect. We'll also need to discuss the upcoming deadlines." },
+      { sender: "AI", content: "Noted. I'll include a timeline of our project milestones in my report." },
+    ]
+  },
+  {
+    id: 3,
+    title: "Client Feedback",
+    messages: [
+      { sender: "User", content: "The client loved our proposal!" },
+      { sender: "AI", content: "That's excellent news! Did they provide any specific feedback?" },
+      { sender: "User", content: "Yes, they particularly liked the innovative approach we suggested." },
+      { sender: "AI", content: "Great! We should incorporate their feedback into our next steps." },
+    ]
+  },
 ];
 
 const ChatPage = () => {
@@ -21,6 +48,16 @@ const ChatPage = () => {
       ...prev,
       [threadId]: !prev[threadId]
     }));
+  };
+
+  const renderPreview = (messages) => {
+    const previewMessages = messages.slice(-2);
+    return previewMessages.map((message, index) => (
+      <p key={index} className="text-sm">
+        <span className="font-semibold">{message.sender}: </span>
+        {message.content}
+      </p>
+    ));
   };
 
   return (
@@ -43,29 +80,32 @@ const ChatPage = () => {
           <CardContent className="pt-6">
             <h3 className="text-sm font-semibold mb-2 text-gray-500">Message Threads</h3>
             {mockThreads.map((thread) => (
-              <div key={thread.id} className="mb-2">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-left"
-                  onClick={() => toggleThread(thread.id)}
-                >
-                  {expandedThreads[thread.id] ? (
-                    <ChevronDown className="mr-2 h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="mr-2 h-4 w-4" />
-                  )}
-                  {thread.title}
-                </Button>
-                {expandedThreads[thread.id] && (
-                  <div className="ml-6 mt-2 space-y-1">
-                    {thread.messages.map((message, index) => (
-                      <p key={index} className="text-sm text-muted-foreground">
-                        {message}
-                      </p>
-                    ))}
+              <Card key={thread.id} className="mb-2 cursor-pointer" onClick={() => toggleThread(thread.id)}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">{thread.title}</h4>
+                    {expandedThreads[thread.id] ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
                   </div>
-                )}
-              </div>
+                  {expandedThreads[thread.id] ? (
+                    <div className="space-y-2">
+                      {thread.messages.map((message, index) => (
+                        <p key={index} className="text-sm">
+                          <span className="font-semibold">{message.sender}: </span>
+                          {message.content}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {renderPreview(thread.messages)}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             ))}
           </CardContent>
         </Card>
