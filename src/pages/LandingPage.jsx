@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { Upload, Image as ImageIcon, Robot } from 'lucide-react';
 
 const LandingPage = () => {
   return (
@@ -17,19 +18,6 @@ const LandingPage = () => {
             </Button>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            {/* Placeholder for SVG */}
-            <div className="w-64 h-64 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold">
-              SVG Placeholder
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Animation Section */}
-      <section className="py-16 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
-          <div className="flex justify-center">
             <AnimatedProcess />
           </div>
         </div>
@@ -92,6 +80,40 @@ const AnimatedProcess = () => {
     }
   };
 
+  const imageVariants = {
+    initial: { x: -50, opacity: 0 },
+    animate: { 
+      x: 0, 
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const robotVariants = {
+    initial: { rotate: -5 },
+    animate: { 
+      rotate: 5,
+      transition: {
+        duration: 0.5,
+        yoyo: Infinity
+      }
+    }
+  };
+
+  const metaFieldVariants = {
+    initial: { width: 0 },
+    animate: { 
+      width: "100%",
+      transition: {
+        duration: 1,
+        ease: "easeInOut"
+      }
+    }
+  };
+
   return (
     <motion.div 
       className="flex flex-col items-center"
@@ -99,17 +121,43 @@ const AnimatedProcess = () => {
       initial="initial"
       animate="animate"
     >
-      <motion.div variants={itemVariants} className="mb-4">
-        <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl">1</div>
-        <p className="mt-2 text-center">Upload File</p>
+      <motion.div variants={itemVariants} className="mb-8 text-center">
+        <motion.div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
+          <Upload size={32} />
+        </motion.div>
+        <p className="mt-2">Upload File</p>
+        <motion.div 
+          variants={imageVariants}
+          className="absolute -right-8 top-1/2 transform -translate-y-1/2"
+        >
+          <ImageIcon size={24} />
+        </motion.div>
       </motion.div>
-      <motion.div variants={itemVariants} className="mb-4">
-        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl">2</div>
-        <p className="mt-2 text-center">AI Processing</p>
+      <motion.div variants={itemVariants} className="mb-8 text-center">
+        <motion.div 
+          className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2"
+          variants={robotVariants}
+        >
+          <Robot size={32} />
+        </motion.div>
+        <p className="mt-2">AI Processing</p>
       </motion.div>
-      <motion.div variants={itemVariants}>
-        <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl">3</div>
-        <p className="mt-2 text-center">Meta Info Generated</p>
+      <motion.div variants={itemVariants} className="text-center">
+        <motion.div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
+          <span>3</span>
+        </motion.div>
+        <p className="mt-2">Meta Info Generated</p>
+        <motion.div className="mt-4 text-left">
+          <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded mb-2 overflow-hidden">
+            <motion.span className="block h-full bg-blue-300" />
+          </motion.div>
+          <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded mb-2 overflow-hidden">
+            <motion.span className="block h-full bg-green-300" />
+          </motion.div>
+          <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded overflow-hidden">
+            <motion.span className="block h-full bg-purple-300" />
+          </motion.div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
