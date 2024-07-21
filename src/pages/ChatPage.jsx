@@ -184,49 +184,57 @@ const ChatPage = () => {
                 onClick={() => toggleThread(thread.id)}
               >
                 <CardContent className="p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <h4 className="font-semibold">{thread.title}</h4>
-                      {Object.entries(thread.metaData).map(([key, value], index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {key}: {value}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {!expandedThreads[thread.id] && (
-                        <Badge variant="outline" className="text-xs">Preview</Badge>
-                      )}
-                      {expandedThreads[thread.id] ? (
-                        <Button variant="ghost" size="sm" onClick={(e) => closeThread(thread.id, e)}>
-                          <MinusCircle className="h-4 w-4" />
-                        </Button>
-                      ) : (
-                        <ChevronRight className="h-4 w-4" />
-                      )}
-                    </div>
-                  </div>
-                  {expandedThreads[thread.id] ? (
-                    <div className="space-y-2 mt-2 border-t pt-2">
-                      {renderMessage(thread)}
-                      {!thread.aiResponse && (
-                        <div className="flex items-center space-x-2 mt-2">
-                          <Input
-                            placeholder="Enter new message..."
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            className="flex-1"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>Send</Button>
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold truncate">{thread.title}</h4>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {Object.entries(thread.metaData).map(([key, value], index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {key}: {value}
+                            </Badge>
+                          ))}
                         </div>
-                      )}
+                      </div>
+                      <div className="flex items-center ml-2">
+                        {!expandedThreads[thread.id] && (
+                          <Badge variant="outline" className="text-xs mr-2">Preview</Badge>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={(e) => {
+                          e.stopPropagation();
+                          toggleThread(thread.id);
+                        }}>
+                          {expandedThreads[thread.id] ? (
+                            <MinusCircle className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="text-sm text-gray-600">
-                      <p className="truncate">{thread.message.content}</p>
+                    <div className={`overflow-hidden transition-all duration-300 ${expandedThreads[thread.id] ? 'max-h-[1000px]' : 'max-h-0'}`}>
+                      <div className="space-y-2 mt-2 border-t pt-2">
+                        {renderMessage(thread)}
+                        {!thread.aiResponse && (
+                          <div className="flex items-center space-x-2 mt-2">
+                            <Input
+                              placeholder="Enter new message..."
+                              value={newMessage}
+                              onChange={(e) => setNewMessage(e.target.value)}
+                              className="flex-1"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>Send</Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
+                    {!expandedThreads[thread.id] && (
+                      <div className="text-sm text-gray-600 mt-2">
+                        <p className="truncate">{thread.message.content}</p>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
