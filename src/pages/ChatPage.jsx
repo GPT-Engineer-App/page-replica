@@ -47,10 +47,19 @@ const ChatPage = () => {
   const [editingMessage, setEditingMessage] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
-  const toggleThread = (threadId) => {
+  const toggleThread = (threadId, event) => {
+    event.stopPropagation();
     setExpandedThreads(prev => ({
       ...prev,
       [threadId]: !prev[threadId]
+    }));
+  };
+
+  const closeThread = (threadId, event) => {
+    event.stopPropagation();
+    setExpandedThreads(prev => ({
+      ...prev,
+      [threadId]: false
     }));
   };
 
@@ -73,12 +82,14 @@ const ChatPage = () => {
     setEditedContent("");
   };
 
-  const startEditing = (message) => {
+  const startEditing = (message, event) => {
+    event.stopPropagation();
     setEditingMessage(message.id);
     setEditedContent(message.content);
   };
 
-  const cancelEditing = () => {
+  const cancelEditing = (event) => {
+    event.stopPropagation();
     setEditingMessage(null);
     setEditedContent("");
   };
@@ -92,7 +103,7 @@ const ChatPage = () => {
       <div className="flex justify-between items-center mb-1">
         <span className="font-semibold text-sm">{message.sender}</span>
         {message.isEditable && !editingMessage && (
-          <Button variant="ghost" size="sm" onClick={() => startEditing(message)}>
+          <Button variant="ghost" size="sm" onClick={(e) => startEditing(message, e)}>
             <Edit2 className="h-4 w-4" />
           </Button>
         )}
@@ -103,12 +114,13 @@ const ChatPage = () => {
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             className="w-full p-2 border rounded"
+            onClick={(e) => e.stopPropagation()}
           />
           <div className="flex justify-end space-x-2">
-            <Button size="sm" variant="outline" onClick={cancelEditing}>
+            <Button size="sm" variant="outline" onClick={(e) => cancelEditing(e)}>
               <X className="h-4 w-4 mr-1" /> Cancel
             </Button>
-            <Button size="sm" onClick={() => handleEditMessage(threadId, message.id, editedContent)}>
+            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleEditMessage(threadId, message.id, editedContent); }}>
               <Check className="h-4 w-4 mr-1" /> Save
             </Button>
           </div>
@@ -140,7 +152,7 @@ const ChatPage = () => {
           <CardContent className="pt-6">
             <h3 className="text-sm font-semibold mb-2 text-gray-500">Message Threads</h3>
             {threads.map((thread) => (
-              <Card key={thread.id} className="mb-2 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleThread(thread.id)}>
+              <Card key={thread.id} className="mb-2 cursor-pointer hover:bg-gray-50 transition-colors" onClick={(e) => toggleThread(thread.id, e)}>
                 <CardContent className="p-3">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold">{thread.title}</h4>
@@ -149,7 +161,9 @@ const ChatPage = () => {
                         <Badge variant="outline" className="text-xs">Preview</Badge>
                       )}
                       {expandedThreads[thread.id] ? (
-                        <ChevronDown className="h-4 w-4" />
+                        <Button variant="ghost" size="sm" onClick={(e) => closeThread(thread.id, e)}>
+                          <X className="h-4 w-4" />
+                        </Button>
                       ) : (
                         <ChevronRight className="h-4 w-4" />
                       )}
