@@ -1,6 +1,5 @@
-import { LayoutDashboard, BarChart, Key, MessageCircle, HelpCircle, Image } from "lucide-react";
+import { LayoutDashboard, BarChart, Key, MessageCircle, HelpCircle } from "lucide-react";
 import ChatPage from "./pages/ChatPage.jsx";
-import TestingImageUploadPage from "./pages/TestingImageUploadPage.jsx";
 
 export const navItems = [
   {
@@ -8,12 +7,6 @@ export const navItems = [
     to: "/",
     icon: <LayoutDashboard className="h-4 w-4" />,
     page: <ChatPage />,
-  },
-  {
-    title: "Testing Image Upload",
-    to: "/testing-image-upload",
-    icon: <Image className="h-4 w-4" />,
-    page: <TestingImageUploadPage />,
   },
   {
     title: "Usage",
