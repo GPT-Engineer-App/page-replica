@@ -13,19 +13,34 @@ const initialThreads = [
     id: 1,
     title: "Project Discussion",
     message: { content: "Hello, how's the project going?", isEditable: true },
-    aiResponse: null
+    aiResponse: null,
+    metaData: {
+      "Meta Data 1": "Value 1",
+      "Meta Data 2": "Value 2",
+      "Meta Data 3": "Value 3"
+    }
   },
   {
     id: 2,
     title: "Team Meeting",
     message: { content: "Meeting at 2 PM today. Don't forget to bring your reports.", isEditable: true },
-    aiResponse: null
+    aiResponse: null,
+    metaData: {
+      "Meta Data 1": "Value A",
+      "Meta Data 2": "Value B",
+      "Meta Data 3": "Value C"
+    }
   },
   {
     id: 3,
     title: "Client Feedback",
     message: { content: "The client loved our proposal!", isEditable: true },
-    aiResponse: null
+    aiResponse: null,
+    metaData: {
+      "Meta Data 1": "Value X",
+      "Meta Data 2": "Value Y",
+      "Meta Data 3": "Value Z"
+    }
   },
 ];
 
@@ -169,7 +184,14 @@ const ChatPage = () => {
                     className="flex items-center justify-between mb-2"
                     onClick={(e) => { e.stopPropagation(); toggleThread(thread.id); }}
                   >
-                    <h4 className="font-semibold">{thread.title}</h4>
+                    <div className="flex items-center space-x-2">
+                      <h4 className="font-semibold">{thread.title}</h4>
+                      {Object.entries(thread.metaData).map(([key, value], index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {key}: {value}
+                        </Badge>
+                      ))}
+                    </div>
                     <div className="flex items-center space-x-2">
                       {!expandedThreads[thread.id] && (
                         <Badge variant="outline" className="text-xs">Preview</Badge>
