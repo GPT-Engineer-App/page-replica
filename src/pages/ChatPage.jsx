@@ -178,12 +178,13 @@ const ChatPage = () => {
           <CardContent className="pt-6">
             <h3 className="text-sm font-semibold mb-2 text-gray-500">Message Threads</h3>
             {threads.map((thread) => (
-              <Card key={thread.id} className="mb-2 cursor-pointer hover:bg-gray-50 transition-colors">
+              <Card 
+                key={thread.id} 
+                className="mb-2 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => toggleThread(thread.id)}
+              >
                 <CardContent className="p-3">
-                  <div 
-                    className="flex items-center justify-between mb-2"
-                    onClick={(e) => { e.stopPropagation(); toggleThread(thread.id); }}
-                  >
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
                       <h4 className="font-semibold">{thread.title}</h4>
                       {Object.entries(thread.metaData).map(([key, value], index) => (
@@ -215,8 +216,9 @@ const ChatPage = () => {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             className="flex-1"
+                            onClick={(e) => e.stopPropagation()}
                           />
-                          <Button size="sm" onClick={() => handleSendMessage(thread.id)}>Send</Button>
+                          <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>Send</Button>
                         </div>
                       )}
                     </div>
