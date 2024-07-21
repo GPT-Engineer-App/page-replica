@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, Edit2, Check, X } from 'lucide-react';
 
 const initialThreads = [
   {
@@ -44,6 +44,7 @@ const ChatPage = () => {
   const [threads, setThreads] = useState(initialThreads);
   const [expandedThreads, setExpandedThreads] = useState({});
   const [editingMessage, setEditingMessage] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
 
   const toggleThread = (threadId) => {
     setExpandedThreads(prev => ({
@@ -67,35 +68,53 @@ const ChatPage = () => {
           : thread
       )
     );
+    setEditingMessage(null);
+    setEditedContent("");
+  };
+
+  const startEditing = (message) => {
+    setEditingMessage(message.id);
+    setEditedContent(message.content);
+  };
+
+  const cancelEditing = () => {
+    setEditingMessage(null);
+    setEditedContent("");
   };
 
   const handleRunAI = () => {
-    // Placeholder for AI response generation and benchmarking
     console.log("Running AI and benchmarking responses...");
-    // Here you would typically call an API to generate AI responses
-    // and then update the thread messages with the new AI responses
   };
 
   const renderMessage = (message, threadId) => (
-    <div key={message.id} className="mb-2">
-      <p className="text-sm">
-        <span className="font-semibold">{message.sender}: </span>
-        {message.isEditable && editingMessage === message.id ? (
-          <Input
-            value={message.content}
-            onChange={(e) => handleEditMessage(threadId, message.id, e.target.value)}
-            onBlur={() => setEditingMessage(null)}
-            autoFocus
-          />
-        ) : (
-          <span
-            onClick={() => message.isEditable && setEditingMessage(message.id)}
-            className={message.isEditable ? "cursor-pointer hover:bg-gray-100" : ""}
-          >
-            {message.content}
-          </span>
+    <div key={message.id} className={`mb-2 p-2 rounded-lg ${message.sender === 'User' ? 'bg-blue-50' : 'bg-gray-50'}`}>
+      <div className="flex justify-between items-center mb-1">
+        <span className="font-semibold text-sm">{message.sender}</span>
+        {message.isEditable && !editingMessage && (
+          <Button variant="ghost" size="sm" onClick={() => startEditing(message)}>
+            <Edit2 className="h-4 w-4" />
+          </Button>
         )}
-      </p>
+      </div>
+      {message.isEditable && editingMessage === message.id ? (
+        <div className="space-y-2">
+          <Textarea
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          <div className="flex justify-end space-x-2">
+            <Button size="sm" variant="outline" onClick={cancelEditing}>
+              <X className="h-4 w-4 mr-1" /> Cancel
+            </Button>
+            <Button size="sm" onClick={() => handleEditMessage(threadId, message.id, editedContent)}>
+              <Check className="h-4 w-4 mr-1" /> Save
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm">{message.content}</p>
+      )}
     </div>
   );
 
