@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, ChevronDown, Edit2, Check, X, MinusCircle, Send } from 'lucide-react';
+import { ChevronRight, ChevronDown, Edit2, Check, X, MinusCircle, Send, Upload } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const initialThreads = [
@@ -52,6 +52,13 @@ const ChatPage = () => {
   const [editedContent, setEditedContent] = useState("");
   const [newMessages, setNewMessages] = useState({});
   const [isAIRunning, setIsAIRunning] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [aiFields, setAiFields] = useState({
+    field1: '',
+    field2: '',
+    field3: ''
+  });
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
 
   const toggleThread = (threadId) => {
     setExpandedThreads(prev => ({
@@ -123,6 +130,30 @@ const ChatPage = () => {
     setNewMessages(prev => ({ ...prev, [threadId]: "" }));
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUploadedImage(e.target.result);
+        simulateAIResponse();
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const simulateAIResponse = () => {
+    setIsProcessingImage(true);
+    setTimeout(() => {
+      setAiFields({
+        field1: 'AI Generated Content 1',
+        field2: 'AI Generated Content 2',
+        field3: 'AI Generated Content 3'
+      });
+      setIsProcessingImage(false);
+    }, 2000);
+  };
+
   const renderMessage = (thread) => (
     <div className="mb-2 p-2 rounded-lg bg-blue-50">
       <div className="flex justify-between items-center mb-1">
@@ -164,6 +195,48 @@ const ChatPage = () => {
 
   return (
     <div className="flex h-full">
+      {/* Testing Image Upload Section */}
+      <div className="w-80 bg-gray-100 p-4 border-r">
+        <h2 className="text-lg font-semibold mb-4">Testing Image Upload</h2>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="image-upload" className="block text-sm font-medium text-gray-700 mb-2">
+              Upload Image
+            </label>
+            <Input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full"
+            />
+          </div>
+          {uploadedImage && (
+            <div>
+              <img src={uploadedImage} alt="Uploaded" className="w-full h-auto mb-4 rounded" />
+            </div>
+          )}
+          {isProcessingImage ? (
+            <div className="text-center">Processing image...</div>
+          ) : (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Field 1</label>
+                <Input value={aiFields.field1} readOnly />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Field 2</label>
+                <Input value={aiFields.field2} readOnly />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Field 3</label>
+                <Input value={aiFields.field3} readOnly />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col p-4">
         <div className="mb-4 flex justify-between items-center">
