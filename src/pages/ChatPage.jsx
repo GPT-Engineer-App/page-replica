@@ -161,7 +161,7 @@ const ChatPage = () => {
         </div>
 
         <div className="mt-4 text-xs text-gray-500">
-          <p>API and Playground requests will not be used to train our models.</p>
+          <p>API and Internal-Playground requests will not be used to train our models.</p>
           <a href="#" className="text-blue-500">Learn more</a>
         </div>
       </div>
