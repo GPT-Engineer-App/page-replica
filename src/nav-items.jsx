@@ -4,38 +4,38 @@ import TestingImageUpload from "./pages/TestingImageUpload.jsx";
 
 export const navItems = [
   {
-    title: "Internal-Playground",
-    to: "/",
+    title: "Getting Started",
+    to: "/docs",
     icon: <LayoutDashboard className="h-4 w-4" />,
     page: <ChatPage />,
   },
   {
     title: "Testing Image Upload",
-    to: "/testing-image-upload",
+    to: "/docs/testing-image-upload",
     icon: <Image className="h-4 w-4" />,
     page: <TestingImageUpload />,
   },
   {
     title: "Usage",
-    to: "/usage",
+    to: "/docs/usage",
     icon: <BarChart className="h-4 w-4" />,
     page: <div>Usage Page</div>,
   },
   {
     title: "API keys",
-    to: "/api-keys",
+    to: "/docs/api-keys",
     icon: <Key className="h-4 w-4" />,
     page: <div>API Keys Page</div>,
   },
   {
     title: "Forum",
-    to: "/forum",
+    to: "/docs/forum",
     icon: <MessageCircle className="h-4 w-4" />,
     page: <div>Forum Page</div>,
   },
   {
     title: "Help",
-    to: "/help",
+    to: "/docs/help",
     icon: <HelpCircle className="h-4 w-4" />,
     page: <div>Help Page</div>,
   },
