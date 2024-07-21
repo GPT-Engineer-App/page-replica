@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
+import { ChevronRight, ChevronDown } from 'lucide-react';
+
+const mockThreads = [
+  { id: 1, title: "Project Discussion", messages: ["Hello", "How's the project going?"] },
+  { id: 2, title: "Team Meeting", messages: ["Meeting at 2 PM", "Don't forget to bring your reports"] },
+  { id: 3, title: "Client Feedback", messages: ["The client loved our proposal!", "Let's schedule a follow-up"] },
+];
 
 const ChatPage = () => {
+  const [expandedThreads, setExpandedThreads] = useState({});
+
+  const toggleThread = (threadId) => {
+    setExpandedThreads(prev => ({
+      ...prev,
+      [threadId]: !prev[threadId]
+    }));
+  };
+
   return (
     <div className="flex h-full">
       {/* Main Chat Area */}
@@ -23,10 +39,34 @@ const ChatPage = () => {
           </Select>
         </div>
         
-        <Card className="flex-1 mb-4">
+        <Card className="flex-1 mb-4 overflow-auto">
           <CardContent className="pt-6">
-            <h3 className="text-sm font-semibold mb-2 text-gray-500">SYSTEM</h3>
-            <Textarea placeholder="Enter system instructions" className="h-32 border-0 focus:ring-0" />
+            <h3 className="text-sm font-semibold mb-2 text-gray-500">Message Threads</h3>
+            {mockThreads.map((thread) => (
+              <div key={thread.id} className="mb-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-left"
+                  onClick={() => toggleThread(thread.id)}
+                >
+                  {expandedThreads[thread.id] ? (
+                    <ChevronDown className="mr-2 h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="mr-2 h-4 w-4" />
+                  )}
+                  {thread.title}
+                </Button>
+                {expandedThreads[thread.id] && (
+                  <div className="ml-6 mt-2 space-y-1">
+                    {thread.messages.map((message, index) => (
+                      <p key={index} className="text-sm text-muted-foreground">
+                        {message}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </CardContent>
         </Card>
         
