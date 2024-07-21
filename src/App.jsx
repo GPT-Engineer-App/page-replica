@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import LandingPage from "./pages/LandingPage";
 import TestingImageUpload from "./pages/TestingImageUpload";
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Router>
+          <Navbar />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route element={<Layout />}>

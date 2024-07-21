@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { Upload, Image as ImageIcon, Cpu, ArrowDown } from 'lucide-react';
+import { Upload, Cpu, ArrowRight } from 'lucide-react';
 
 const LandingPage = () => {
   return (
@@ -112,12 +112,12 @@ const AnimatedProcess = () => {
 
   return (
     <motion.div 
-      className="flex flex-col items-center relative"
+      className="flex flex-wrap justify-center items-center relative w-full max-w-2xl"
       variants={containerVariants}
       initial="initial"
       animate="animate"
     >
-      <motion.div variants={itemVariants} className="mb-16 text-center">
+      <motion.div variants={itemVariants} className="mb-16 text-center mx-4">
         <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
           <Upload size={32} />
         </div>
@@ -125,28 +125,30 @@ const AnimatedProcess = () => {
       </motion.div>
 
       <motion.svg
-        width="40"
+        width="100"
         height="60"
-        viewBox="0 0 40 60"
+        viewBox="0 0 100 60"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute top-24 left-1/2 transform -translate-x-1/2"
+        className="mx-4"
       >
         <motion.path
-          d="M20 0 L20 60"
+          d="M0 30 Q 50 0, 100 30"
           stroke="white"
           strokeWidth="2"
+          fill="none"
           variants={arrowVariants}
         />
         <motion.path
-          d="M10 50 L20 60 L30 50"
+          d="M90 20 L100 30 L90 40"
           stroke="white"
           strokeWidth="2"
+          fill="none"
           variants={arrowVariants}
         />
       </motion.svg>
 
-      <motion.div variants={itemVariants} className="mb-16 text-center">
+      <motion.div variants={itemVariants} className="mb-16 text-center mx-4">
         <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
           <Cpu size={32} />
         </div>
@@ -154,30 +156,32 @@ const AnimatedProcess = () => {
       </motion.div>
 
       <motion.svg
-        width="40"
+        width="100"
         height="60"
-        viewBox="0 0 40 60"
+        viewBox="0 0 100 60"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute top-[280px] left-1/2 transform -translate-x-1/2"
+        className="mx-4"
       >
         <motion.path
-          d="M20 0 L20 60"
+          d="M0 30 Q 50 60, 100 30"
           stroke="white"
           strokeWidth="2"
+          fill="none"
           variants={arrowVariants}
         />
         <motion.path
-          d="M10 50 L20 60 L30 50"
+          d="M90 20 L100 30 L90 40"
           stroke="white"
           strokeWidth="2"
+          fill="none"
           variants={arrowVariants}
         />
       </motion.svg>
 
-      <motion.div variants={itemVariants} className="text-center">
+      <motion.div variants={itemVariants} className="text-center mx-4">
         <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
-          <span>3</span>
+          <ArrowRight size={32} />
         </div>
         <p className="mt-2 font-semibold">Meta Info Generated</p>
         <motion.div className="mt-4 text-left w-48">
