@@ -2,18 +2,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { Upload, Image as ImageIcon, Cpu } from 'lucide-react';
+import { Upload, Image as ImageIcon, Cpu, ArrowDown } from 'lucide-react';
 
 const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="flex-grow flex items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+      <section className="flex-grow flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
             <h1 className="text-5xl font-bold mb-4">AI-Powered Meta Generator</h1>
             <p className="text-xl mb-8">Upload your files and let our AI generate meta information instantly.</p>
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
               <Link to="/docs">Get Started</Link>
             </Button>
           </div>
@@ -24,32 +24,32 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Key Features</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-indigo-800">Key Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">Instant Meta Generation</h3>
-              <p>Our AI quickly analyzes your files and generates accurate meta information.</p>
-            </div>
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">Multiple File Types</h3>
-              <p>Support for various file formats including images, documents, and more.</p>
-            </div>
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">Easy Integration</h3>
-              <p>Seamlessly integrate our API into your existing workflows and applications.</p>
-            </div>
+            <FeatureCard
+              title="Instant Meta Generation"
+              description="Our AI quickly analyzes your files and generates accurate meta information."
+            />
+            <FeatureCard
+              title="Multiple File Types"
+              description="Support for various file formats including images, documents, and more."
+            />
+            <FeatureCard
+              title="Easy Integration"
+              description="Seamlessly integrate our API into your existing workflows and applications."
+            />
           </div>
         </div>
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-16 bg-gray-800 text-white">
+      <section className="py-16 bg-indigo-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to streamline your workflow?</h2>
           <p className="text-xl mb-8">Join thousands of satisfied users and start generating meta information effortlessly!</p>
-          <Button asChild size="lg" variant="secondary">
+          <Button asChild size="lg" variant="secondary" className="bg-white text-indigo-800 hover:bg-gray-100">
             <Link to="/signup">Sign Up Now</Link>
           </Button>
         </div>
@@ -57,6 +57,13 @@ const LandingPage = () => {
     </div>
   );
 };
+
+const FeatureCard = ({ title, description }) => (
+  <div className="bg-white p-6 rounded-lg shadow-md">
+    <h3 className="text-xl font-semibold mb-2 text-indigo-700">{title}</h3>
+    <p className="text-gray-600">{description}</p>
+  </div>
+);
 
 const AnimatedProcess = () => {
   const containerVariants = {
@@ -80,25 +87,14 @@ const AnimatedProcess = () => {
     }
   };
 
-  const imageVariants = {
-    initial: { x: -50, opacity: 0 },
+  const arrowVariants = {
+    initial: { opacity: 0, pathLength: 0 },
     animate: { 
-      x: 0, 
-      opacity: 1,
+      opacity: 1, 
+      pathLength: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const cpuVariants = {
-    initial: { scale: 0.9 },
-    animate: { 
-      scale: 1.1,
-      transition: {
-        duration: 0.5,
-        yoyo: Infinity
+        ease: "easeInOut"
       }
     }
   };
@@ -116,46 +112,83 @@ const AnimatedProcess = () => {
 
   return (
     <motion.div 
-      className="flex flex-col items-center"
+      className="flex flex-col items-center relative"
       variants={containerVariants}
       initial="initial"
       animate="animate"
     >
-      <motion.div variants={itemVariants} className="mb-8 text-center">
-        <motion.div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
+      <motion.div variants={itemVariants} className="mb-16 text-center">
+        <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
           <Upload size={32} />
-        </motion.div>
-        <p className="mt-2">Upload File</p>
-        <motion.div 
-          variants={imageVariants}
-          className="absolute -right-8 top-1/2 transform -translate-y-1/2"
-        >
-          <ImageIcon size={24} />
-        </motion.div>
+        </div>
+        <p className="mt-2 font-semibold">Upload File</p>
       </motion.div>
-      <motion.div variants={itemVariants} className="mb-8 text-center">
-        <motion.div 
-          className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2"
-          variants={cpuVariants}
-        >
+
+      <motion.svg
+        width="40"
+        height="60"
+        viewBox="0 0 40 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute top-24 left-1/2 transform -translate-x-1/2"
+      >
+        <motion.path
+          d="M20 0 L20 60"
+          stroke="white"
+          strokeWidth="2"
+          variants={arrowVariants}
+        />
+        <motion.path
+          d="M10 50 L20 60 L30 50"
+          stroke="white"
+          strokeWidth="2"
+          variants={arrowVariants}
+        />
+      </motion.svg>
+
+      <motion.div variants={itemVariants} className="mb-16 text-center">
+        <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
           <Cpu size={32} />
-        </motion.div>
-        <p className="mt-2">AI Processing</p>
+        </div>
+        <p className="mt-2 font-semibold">AI Processing</p>
       </motion.div>
+
+      <motion.svg
+        width="40"
+        height="60"
+        viewBox="0 0 40 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute top-[280px] left-1/2 transform -translate-x-1/2"
+      >
+        <motion.path
+          d="M20 0 L20 60"
+          stroke="white"
+          strokeWidth="2"
+          variants={arrowVariants}
+        />
+        <motion.path
+          d="M10 50 L20 60 L30 50"
+          stroke="white"
+          strokeWidth="2"
+          variants={arrowVariants}
+        />
+      </motion.svg>
+
       <motion.div variants={itemVariants} className="text-center">
-        <motion.div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
+        <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2">
           <span>3</span>
-        </motion.div>
-        <p className="mt-2">Meta Info Generated</p>
-        <motion.div className="mt-4 text-left">
+        </div>
+        <p className="mt-2 font-semibold">Meta Info Generated</p>
+        <motion.div className="mt-4 text-left w-48">
           <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded mb-2 overflow-hidden">
-            <motion.span className="block h-full bg-blue-300" />
+            <motion.span className="block h-full bg-blue-300 text-xs px-2 py-1">Title: AI Image</motion.span>
           </motion.div>
           <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded mb-2 overflow-hidden">
-            <motion.span className="block h-full bg-green-300" />
+            <motion.span className="block h-full bg-green-300 text-xs px-2 py-1">Tags: AI, Tech</motion.span>
           </motion.div>
           <motion.div variants={metaFieldVariants} className="h-6 bg-white rounded overflow-hidden">
-            <motion.span className="block h-full bg-purple-300" />
+            <motion.span className="block h-full bg-purple-300 text-xs px-2 py-1">Size: 1024x1024</motion.span>
           </motion.div>
         </motion.div>
       </motion.div>
