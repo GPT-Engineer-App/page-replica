@@ -163,6 +163,10 @@ const ChatPage = () => {
               <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
             </SelectContent>
           </Select>
+          <div className="flex space-x-2">
+            <Button size="sm">Run AI</Button>
+            <Button size="sm">Save</Button>
+          </div>
         </div>
         
         <Card className="flex-1 mb-4 overflow-auto">
