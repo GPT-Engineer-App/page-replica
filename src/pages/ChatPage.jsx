@@ -229,6 +229,18 @@ const ChatPage = () => {
                         >
                           <div className="space-y-2 mt-2 border-t pt-2">
                             {renderMessage(thread)}
+                            <div className="flex items-center space-x-2 mt-2">
+                              <Input
+                                placeholder="Enter new message..."
+                                value={newMessages[thread.id] || ""}
+                                onChange={(e) => setNewMessages(prev => ({ ...prev, [thread.id]: e.target.value }))}
+                                className="flex-1"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>
+                                <Send className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </motion.div>
                       )}
@@ -246,18 +258,6 @@ const ChatPage = () => {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Input
-                        placeholder="Enter new message..."
-                        value={newMessages[thread.id] || ""}
-                        onChange={(e) => setNewMessages(prev => ({ ...prev, [thread.id]: e.target.value }))}
-                        className="flex-1"
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                      <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>
-                        <Send className="h-4 w-4" />
-                      </Button>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
