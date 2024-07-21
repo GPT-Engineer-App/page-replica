@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, ChevronDown, Edit2, Check, X, MinusCircle, Send } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const initialThreads = [
   {
@@ -218,16 +219,33 @@ const ChatPage = () => {
                         </Button>
                       </div>
                     </div>
-                    <div className={`overflow-hidden transition-all duration-300 ${expandedThreads[thread.id] ? 'max-h-[1000px]' : 'max-h-0'}`}>
-                      <div className="space-y-2 mt-2 border-t pt-2">
-                        {renderMessage(thread)}
-                      </div>
-                    </div>
-                    {!expandedThreads[thread.id] && (
-                      <div className="text-sm text-gray-600 mt-2">
-                        <p className="truncate">{thread.message.content}</p>
-                      </div>
-                    )}
+                    <AnimatePresence>
+                      {expandedThreads[thread.id] && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="space-y-2 mt-2 border-t pt-2">
+                            {renderMessage(thread)}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                      {!expandedThreads[thread.id] && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="text-sm text-gray-600 mt-2"
+                        >
+                          <p className="truncate">{thread.message.content}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                     <div className="flex items-center space-x-2 mt-2">
                       <Input
                         placeholder="Enter new message..."
