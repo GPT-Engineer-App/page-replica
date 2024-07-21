@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,32 +12,20 @@ const initialThreads = [
   {
     id: 1,
     title: "Project Discussion",
-    messages: [
-      { id: 1, sender: "User", content: "Hello, how's the project going?", isEditable: true },
-      { id: 2, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-      { id: 3, sender: "User", content: "Great! What's our next step?", isEditable: true },
-      { id: 4, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-    ]
+    message: { content: "Hello, how's the project going?", isEditable: true },
+    aiResponse: null
   },
   {
     id: 2,
     title: "Team Meeting",
-    messages: [
-      { id: 5, sender: "User", content: "Meeting at 2 PM today. Don't forget to bring your reports.", isEditable: true },
-      { id: 6, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-      { id: 7, sender: "User", content: "Perfect. We'll also need to discuss the upcoming deadlines.", isEditable: true },
-      { id: 8, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-    ]
+    message: { content: "Meeting at 2 PM today. Don't forget to bring your reports.", isEditable: true },
+    aiResponse: null
   },
   {
     id: 3,
     title: "Client Feedback",
-    messages: [
-      { id: 9, sender: "User", content: "The client loved our proposal!", isEditable: true },
-      { id: 10, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-      { id: 11, sender: "User", content: "Yes, they particularly liked the innovative approach we suggested.", isEditable: true },
-      { id: 12, sender: "AI", content: "[AI response placeholder]", isEditable: false },
-    ]
+    message: { content: "The client loved our proposal!", isEditable: true },
+    aiResponse: null
   },
 ];
 
@@ -46,6 +34,8 @@ const ChatPage = () => {
   const [expandedThreads, setExpandedThreads] = useState({});
   const [editingMessage, setEditingMessage] = useState(null);
   const [editedContent, setEditedContent] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const [isAIRunning, setIsAIRunning] = useState(false);
 
   const toggleThread = (threadId, event) => {
     event.stopPropagation();
@@ -63,18 +53,11 @@ const ChatPage = () => {
     }));
   };
 
-  const handleEditMessage = (threadId, messageId, newContent) => {
+  const handleEditMessage = (threadId, newContent) => {
     setThreads(prevThreads => 
       prevThreads.map(thread => 
         thread.id === threadId
-          ? {
-              ...thread,
-              messages: thread.messages.map(message =>
-                message.id === messageId
-                  ? { ...message, content: newContent }
-                  : message
-              )
-            }
+          ? { ...thread, message: { ...thread.message, content: newContent } }
           : thread
       )
     );
@@ -82,10 +65,10 @@ const ChatPage = () => {
     setEditedContent("");
   };
 
-  const startEditing = (message, event) => {
+  const startEditing = (threadId, event) => {
     event.stopPropagation();
-    setEditingMessage(message.id);
-    setEditedContent(message.content);
+    setEditingMessage(threadId);
+    setEditedContent(threads.find(t => t.id === threadId).message.content);
   };
 
   const cancelEditing = (event) => {
@@ -95,20 +78,41 @@ const ChatPage = () => {
   };
 
   const handleRunAI = () => {
-    console.log("Running AI and benchmarking responses...");
+    setIsAIRunning(true);
+    setTimeout(() => {
+      setThreads(prevThreads =>
+        prevThreads.map(thread => ({
+          ...thread,
+          aiResponse: "mmm interesting"
+        }))
+      );
+      setIsAIRunning(false);
+    }, 2000); // Simulate 2 second delay
   };
 
-  const renderMessage = (message, threadId) => (
-    <div key={message.id} className={`mb-2 p-2 rounded-lg ${message.sender === 'User' ? 'bg-blue-50' : 'bg-gray-50'}`}>
+  const handleSendMessage = (threadId) => {
+    if (newMessage.trim() === "") return;
+    setThreads(prevThreads =>
+      prevThreads.map(thread =>
+        thread.id === threadId
+          ? { ...thread, message: { content: newMessage, isEditable: true }, aiResponse: null }
+          : thread
+      )
+    );
+    setNewMessage("");
+  };
+
+  const renderMessage = (thread) => (
+    <div className="mb-2 p-2 rounded-lg bg-blue-50">
       <div className="flex justify-between items-center mb-1">
-        <span className="font-semibold text-sm">{message.sender}</span>
-        {message.isEditable && !editingMessage && (
-          <Button variant="ghost" size="sm" onClick={(e) => startEditing(message, e)}>
+        <span className="font-semibold text-sm">User</span>
+        {thread.message.isEditable && editingMessage !== thread.id && (
+          <Button variant="ghost" size="sm" onClick={(e) => startEditing(thread.id, e)}>
             <Edit2 className="h-4 w-4" />
           </Button>
         )}
       </div>
-      {message.isEditable && editingMessage === message.id ? (
+      {thread.message.isEditable && editingMessage === thread.id ? (
         <div className="space-y-2">
           <Textarea
             value={editedContent}
@@ -120,13 +124,19 @@ const ChatPage = () => {
             <Button size="sm" variant="outline" onClick={(e) => cancelEditing(e)}>
               <X className="h-4 w-4 mr-1" /> Cancel
             </Button>
-            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleEditMessage(threadId, message.id, editedContent); }}>
+            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleEditMessage(thread.id, editedContent); }}>
               <Check className="h-4 w-4 mr-1" /> Save
             </Button>
           </div>
         </div>
       ) : (
-        <p className="text-sm">{message.content}</p>
+        <p className="text-sm">{thread.message.content}</p>
+      )}
+      {thread.aiResponse && (
+        <div className="mt-2 p-2 rounded-lg bg-gray-50">
+          <span className="font-semibold text-sm">AI</span>
+          <p className="text-sm">{thread.aiResponse}</p>
+        </div>
       )}
     </div>
   );
@@ -145,7 +155,9 @@ const ChatPage = () => {
               <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={handleRunAI}>Run AI</Button>
+          <Button onClick={handleRunAI} disabled={isAIRunning}>
+            {isAIRunning ? "AI Running..." : "Run AI"}
+          </Button>
         </div>
         
         <Card className="flex-1 mb-4 overflow-auto">
@@ -171,11 +183,22 @@ const ChatPage = () => {
                   </div>
                   {expandedThreads[thread.id] ? (
                     <div className="space-y-2 mt-2 border-t pt-2">
-                      {thread.messages.map(message => renderMessage(message, thread.id))}
+                      {renderMessage(thread)}
+                      {!thread.aiResponse && (
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Input
+                            placeholder="Enter new message..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            className="flex-1"
+                          />
+                          <Button size="sm" onClick={() => handleSendMessage(thread.id)}>Send</Button>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="text-sm text-gray-600">
-                      <p className="truncate">{thread.messages[thread.messages.length - 1].content}</p>
+                      <p className="truncate">{thread.message.content}</p>
                     </div>
                   )}
                 </CardContent>
@@ -183,18 +206,6 @@ const ChatPage = () => {
             ))}
           </CardContent>
         </Card>
-        
-        <div className="mt-auto">
-          <Card>
-            <CardContent className="p-2">
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">User</Button>
-                <Input placeholder="Enter user message..." className="flex-1" />
-                <Button size="sm">Add</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Functions Panel */}
