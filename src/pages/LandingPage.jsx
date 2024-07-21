@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { Upload, Image as ImageIcon, Robot } from 'lucide-react';
+import { Upload, Image as ImageIcon, Cpu } from 'lucide-react';
 
 const LandingPage = () => {
   return (
@@ -92,10 +92,10 @@ const AnimatedProcess = () => {
     }
   };
 
-  const robotVariants = {
-    initial: { rotate: -5 },
+  const cpuVariants = {
+    initial: { scale: 0.9 },
     animate: { 
-      rotate: 5,
+      scale: 1.1,
       transition: {
         duration: 0.5,
         yoyo: Infinity
@@ -136,9 +136,9 @@ const AnimatedProcess = () => {
       <motion.div variants={itemVariants} className="mb-8 text-center">
         <motion.div 
           className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-2"
-          variants={robotVariants}
+          variants={cpuVariants}
         >
-          <Robot size={32} />
+          <Cpu size={32} />
         </motion.div>
         <p className="mt-2">AI Processing</p>
       </motion.div>
