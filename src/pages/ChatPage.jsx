@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Edit2, Check, X, MinusCircle, Send } from 'lucide-react';
+import { Edit2, Check, X, MinusCircle, ChevronRight, Send } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 const initialThreads = [
   {
@@ -92,19 +92,6 @@ const ChatPage = () => {
     setEditedContent("");
   };
 
-  const handleRunAI = () => {
-    setIsAIRunning(true);
-    setTimeout(() => {
-      setThreads(prevThreads =>
-        prevThreads.map(thread => ({
-          ...thread,
-          aiResponse: "mmm interesting"
-        }))
-      );
-      setIsAIRunning(false);
-    }, 2000); // Simulate 2 second delay
-  };
-
   const handleSendMessage = (threadId) => {
     const newMessage = newMessages[threadId];
     if (!newMessage || newMessage.trim() === "") return;
@@ -163,9 +150,9 @@ const ChatPage = () => {
   );
 
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col md:flex-row h-full">
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col p-4">
+      <div className="flex-1 flex flex-col p-4 overflow-auto">
         <div className="mb-4 flex justify-between items-center">
           <Select>
             <SelectTrigger className="w-[180px]">
@@ -176,9 +163,6 @@ const ChatPage = () => {
               <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={handleRunAI} disabled={isAIRunning}>
-            {isAIRunning ? "AI Running..." : "Run AI"}
-          </Button>
         </div>
         
         <Card className="flex-1 mb-4 overflow-auto">
@@ -267,7 +251,7 @@ const ChatPage = () => {
       </div>
 
       {/* Functions Panel */}
-      <div className="w-80 bg-gray-100 p-4">
+      <div className="w-full md:w-80 bg-gray-100 p-4">
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium">Temperature</label>
