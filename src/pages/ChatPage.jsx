@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ChevronRight, ChevronDown, Edit2, Check, X } from 'lucide-react';
 
 const initialThreads = [
@@ -139,23 +140,28 @@ const ChatPage = () => {
           <CardContent className="pt-6">
             <h3 className="text-sm font-semibold mb-2 text-gray-500">Message Threads</h3>
             {threads.map((thread) => (
-              <Card key={thread.id} className="mb-2 cursor-pointer" onClick={() => toggleThread(thread.id)}>
-                <CardContent className="p-4">
+              <Card key={thread.id} className="mb-2 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => toggleThread(thread.id)}>
+                <CardContent className="p-3">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold">{thread.title}</h4>
-                    {expandedThreads[thread.id] ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
+                    <div className="flex items-center space-x-2">
+                      {!expandedThreads[thread.id] && (
+                        <Badge variant="outline" className="text-xs">Preview</Badge>
+                      )}
+                      {expandedThreads[thread.id] ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </div>
                   </div>
                   {expandedThreads[thread.id] ? (
-                    <div className="space-y-2">
+                    <div className="space-y-2 mt-2 border-t pt-2">
                       {thread.messages.map(message => renderMessage(message, thread.id))}
                     </div>
                   ) : (
-                    <div className="space-y-1">
-                      {thread.messages.slice(-2).map(message => renderMessage(message, thread.id))}
+                    <div className="text-sm text-gray-600">
+                      <p className="truncate">{thread.messages[thread.messages.length - 1].content}</p>
                     </div>
                   )}
                 </CardContent>
