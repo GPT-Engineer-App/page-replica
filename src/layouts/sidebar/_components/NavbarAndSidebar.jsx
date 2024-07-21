@@ -2,7 +2,6 @@ import { Package2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { navItems } from "../../../nav-items";
 import { SidebarNavLink } from "./SidebarNavLink";
-import { MessageThreads } from "./MessageThreads";
 
 export const NavbarAndSidebar = () => (
   <div className="hidden border-r bg-muted/40 md:block">
@@ -22,7 +21,6 @@ export const NavbarAndSidebar = () => (
             </SidebarNavLink>
           ))}
         </nav>
-        <MessageThreads />
       </div>
     </div>
   </div>
