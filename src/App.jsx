@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import Docs from "./pages/Docs";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
+import LandingPage from "./pages/LandingPage";
+import TestingImageUpload from "./pages/TestingImageUpload";
 
 const queryClient = new QueryClient();
 
@@ -17,11 +19,13 @@ const App = () => {
         <Toaster />
         <Router>
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/docs/*" element={<Docs />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/testing-image-upload" element={<TestingImageUpload />} />
             </Route>
           </Routes>
         </Router>
