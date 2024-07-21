@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, ChevronDown, Edit2, Check, X, MinusCircle } from 'lucide-react';
+import { ChevronRight, ChevronDown, Edit2, Check, X, MinusCircle, Send } from 'lucide-react';
 
 const initialThreads = [
   {
@@ -49,7 +49,7 @@ const ChatPage = () => {
   const [expandedThreads, setExpandedThreads] = useState({});
   const [editingMessage, setEditingMessage] = useState(null);
   const [editedContent, setEditedContent] = useState("");
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessages, setNewMessages] = useState({});
   const [isAIRunning, setIsAIRunning] = useState(false);
 
   const toggleThread = (threadId) => {
@@ -105,15 +105,21 @@ const ChatPage = () => {
   };
 
   const handleSendMessage = (threadId) => {
-    if (newMessage.trim() === "") return;
+    const newMessage = newMessages[threadId];
+    if (!newMessage || newMessage.trim() === "") return;
+    
     setThreads(prevThreads =>
       prevThreads.map(thread =>
         thread.id === threadId
-          ? { ...thread, message: { content: newMessage, isEditable: true }, aiResponse: null }
+          ? { 
+              ...thread, 
+              message: { content: thread.message.content + "\n\nUser: " + newMessage, isEditable: true },
+              aiResponse: null 
+            }
           : thread
       )
     );
-    setNewMessage("");
+    setNewMessages(prev => ({ ...prev, [threadId]: "" }));
   };
 
   const renderMessage = (thread) => (
@@ -144,7 +150,7 @@ const ChatPage = () => {
           </div>
         </div>
       ) : (
-        <p className="text-sm">{thread.message.content}</p>
+        <p className="text-sm whitespace-pre-wrap">{thread.message.content}</p>
       )}
       {thread.aiResponse && (
         <div className="mt-2 p-2 rounded-lg bg-gray-50">
@@ -215,18 +221,6 @@ const ChatPage = () => {
                     <div className={`overflow-hidden transition-all duration-300 ${expandedThreads[thread.id] ? 'max-h-[1000px]' : 'max-h-0'}`}>
                       <div className="space-y-2 mt-2 border-t pt-2">
                         {renderMessage(thread)}
-                        {!thread.aiResponse && (
-                          <div className="flex items-center space-x-2 mt-2">
-                            <Input
-                              placeholder="Enter new message..."
-                              value={newMessage}
-                              onChange={(e) => setNewMessage(e.target.value)}
-                              className="flex-1"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>Send</Button>
-                          </div>
-                        )}
                       </div>
                     </div>
                     {!expandedThreads[thread.id] && (
@@ -234,6 +228,18 @@ const ChatPage = () => {
                         <p className="truncate">{thread.message.content}</p>
                       </div>
                     )}
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Input
+                        placeholder="Enter new message..."
+                        value={newMessages[thread.id] || ""}
+                        onChange={(e) => setNewMessages(prev => ({ ...prev, [thread.id]: e.target.value }))}
+                        className="flex-1"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <Button size="sm" onClick={(e) => { e.stopPropagation(); handleSendMessage(thread.id); }}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
