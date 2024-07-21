@@ -126,8 +126,6 @@ const ChatPage = () => {
 
       {/* Functions Panel */}
       <div className="w-80 bg-gray-100 p-4">
-        <Button className="w-full mb-4">+ Add function</Button>
-        
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium">Temperature</label>
