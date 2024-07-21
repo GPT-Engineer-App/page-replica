@@ -2,6 +2,7 @@ import { Package2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { navItems } from "../../../nav-items";
 import { SidebarNavLink } from "./SidebarNavLink";
+import { MessageThreads } from "./MessageThreads";
 
 export const NavbarAndSidebar = () => (
   <div className="hidden border-r bg-muted/40 md:block">
@@ -12,7 +13,7 @@ export const NavbarAndSidebar = () => (
           <span>Acme Inc</span>
         </NavLink>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto">
         <nav className="grid items-start px-2 text-sm font-medium lg:px-4 gap-2">
           {navItems.map((item) => (
             <SidebarNavLink key={item.to} to={item.to}>
@@ -21,6 +22,7 @@ export const NavbarAndSidebar = () => (
             </SidebarNavLink>
           ))}
         </nav>
+        <MessageThreads />
       </div>
     </div>
   </div>
